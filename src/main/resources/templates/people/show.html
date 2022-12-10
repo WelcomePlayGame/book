@@ -5,13 +5,21 @@
     <title>Show Person</title>
 </head>
 <body>
-<h1>Show Perosn</h1>
+<h1>Show Person</h1>
 <di>
-  <p th:text="'Title Book '+${personId.getName()}">Name</p>
+  <p th:text="'Name Client: '+${personId.getName()}">Name</p>
   <p th:text="'Year was born Client: '+${personId.getYear_born()}">Name</p>
 
 </di>
-
+<br/>
+<hr/>
+<h2>List Book</h2>
+<div th:each="book : ${books}">
+<p th:field="${book.getTitle()}">Title</p>
+</div>
+<span th:if="${books.isEmpty()}">Person don't have books</span>
+<hr/>
+<a th:href="@{/people/{id}/edit (id = ${personId.getId()})}">Edit</a>
 
 <form th:method="DELETE" th:action="@{/people/{id} (id=${personId.getId()})}">
     <input  type="submit" value="Delete Person"/>

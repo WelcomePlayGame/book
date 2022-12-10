@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.vadym.people_book.models.Person;
+import ua.vadym.people_book.services.BookService;
 import ua.vadym.people_book.services.PersonService;
 
 @Controller
@@ -13,10 +14,12 @@ public class PersonControler {
 
 
     private final PersonService personService;
+    private final BookService bookService;
 
     @Autowired
-    public PersonControler(PersonService personService) {
+    public PersonControler(PersonService personService, BookService bookService) {
         this.personService = personService;
+        this.bookService = bookService;
     }
 
     @GetMapping
@@ -26,8 +29,9 @@ public class PersonControler {
     }
 
     @GetMapping("/{id}")
-    public String getPersonId(@PathVariable(name = "id") int id, Model model) {
+    public String getPersonId(@PathVariable(name = "id") int id, Model model, @ModelAttribute("person") Person person) {
         model.addAttribute("personId", personService.getPersonId(id));
+        model.addAttribute("books", bookService.findPerson(person));
         return "people/show";
     }
 
@@ -46,6 +50,19 @@ public class PersonControler {
     @DeleteMapping("/{id}")
     public String deletePerson(@PathVariable("id") int id ) {
         personService.deletePerson(id);
+        return "redirect:/people";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String updatePerson(@PathVariable("id") int id, Model model) {
+    model.addAttribute("person", personService.getPersonId(id));
+    return "people/edit";
+    }
+
+
+    @PatchMapping("/{id}")
+    public String editPerson(@PathVariable("id") int id, @ModelAttribute("person") Person person) {
+        personService.editPersonage(id, person);
         return "redirect:/people";
     }
 }

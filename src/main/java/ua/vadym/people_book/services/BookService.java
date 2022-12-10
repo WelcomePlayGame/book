@@ -29,7 +29,18 @@ public class BookService {
         return foundBook.orElse(null);
     }
 
+    @Transactional
     public void saveBook(Book book) {
         bookRepository.save(book);
+    }
+
+    @Transactional
+    public void editBook(int id, Book book) {
+        book.setId(id);
+        bookRepository.save(book);
+    }
+
+    public List<Book> findPerson(Person person) {
+     return    bookRepository.findByPerson(person);
     }
 }
